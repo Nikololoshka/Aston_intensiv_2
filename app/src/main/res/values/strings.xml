@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Aston_intensiv_2</string>
+    <string name="reset_result">Reset result</string>
 </resources>
