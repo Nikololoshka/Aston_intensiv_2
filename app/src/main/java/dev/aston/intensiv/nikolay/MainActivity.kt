@@ -2,8 +2,10 @@ package dev.aston.intensiv.nikolay
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MotionEvent
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.ScrollView
 import coil.ImageLoader
 import coil.load
 import coil.request.CachePolicy
@@ -29,6 +31,22 @@ class MainActivity : AppCompatActivity() {
 
         spinDrum = findViewById(R.id.spin_drum)
         spinDrum.setOnSpinResultListener(this::onSpinResult)
+
+        val scrollView: ScrollView = findViewById(R.id.scroll_view)
+        val verticalSeekView: VerticalSeekView = findViewById(R.id.seek_view)
+        verticalSeekView.addOnChangeListener { _, value, _ ->
+            spinDrum.drumFactor = value / 100f
+        }
+        verticalSeekView.setOnTouchListener { v, event ->
+            if(event.action == MotionEvent.ACTION_DOWN || event.action == MotionEvent.ACTION_MOVE) {
+                scrollView.requestDisallowInterceptTouchEvent(true)
+            }
+            if (event.action == MotionEvent.ACTION_UP) {
+                v.performClick()
+                scrollView.requestDisallowInterceptTouchEvent(false)
+            }
+            false
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

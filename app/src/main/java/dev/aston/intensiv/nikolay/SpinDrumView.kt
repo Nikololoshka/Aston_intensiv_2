@@ -63,6 +63,12 @@ class SpinDrumView @JvmOverloads constructor(
 
     private var onSpinResultListener: ((color: DrumColors) -> Unit)? = null
 
+    var drumFactor: Float = 0.5f
+        set(value) {
+            field = value.coerceIn(0f, 1f)
+            requestLayout()
+        }
+
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val minWidth = paddingLeft + paddingRight + suggestedMinimumWidth
         val w = resolveSize(minWidth, widthMeasureSpec)
@@ -71,10 +77,11 @@ class SpinDrumView @JvmOverloads constructor(
 
         val centerX = w / 2f
         val centerY = h / 2f
-        val radius = min(w, h) * 0.4f
+        val arrowOffset = min(w, h) * 0.05f * drumFactor
+
+        val radius = (min(w, h) - arrowOffset) * 0.5f * drumFactor
         sectorsBoundRect.set(centerX - radius, centerY - radius, centerX + radius, centerY + radius)
 
-        val arrowOffset = radius * 0.1f
         arrowPath.reset()
         arrowPath.moveTo(centerX, centerY - radius + arrowOffset)
         arrowPath.lineTo(centerX - arrowOffset, centerY - radius - arrowOffset / 2)
